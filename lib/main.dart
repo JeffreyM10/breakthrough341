@@ -47,33 +47,37 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class Piece {
-  bool white;
-  int row;
-  int col;
+enum Piece {
+  empty(' '),
+  white('W'),
+  black('B');
 
-  Piece(this.white, this.row, this.col);
+  final String str;
+
+  const Piece(this.str);
+
+  @override
+  String toString() => str;
 }
 
 class BreakthroughState {
   //var board = List.generate(8, (size) => size * size, growable: false);
-  var board = List<Object>.filled(64, Null);
-  var rows = 8;
-  var cols = 8;
+  List<Object> board = List<Object>.filled(64, Null);
+  int rows = 8;
+  int cols = 8;
   //row = pos/cols
   //col = pos % cols
   //pos = r * cols + c
-  var wPiece = 0;
-  var bPiece = 0;
+  int wPiece = 0;
+  int bPiece = 0;
 
   BreakthroughState(){
     //generate black pieces
-    int r = 0;
+    int r = 6;
     int c = 0;
     while(bPiece < 16){
-      Piece newBlack = Piece(false, r, c);
       int pos = r * cols + c;
-      board[pos] = newBlack;
+      board[pos] = Piece.black;
       ++c;
       if(c > 7){
         //c = 8, end of board
@@ -84,12 +88,11 @@ class BreakthroughState {
     }
 
     //generate white pieces
-    r = 6;
+    r = 0;
     c = 0;
     while(wPiece < 16){
-      Piece newWhite = Piece(true, r, c);
       int pos = r * cols + c;
-      board[pos] = newWhite;
+      board[pos] = Piece.white;
       ++c;
       if(c > 7){
         //c = 8, end of board
@@ -111,6 +114,35 @@ class BreakthroughState {
        
       }
 
+    }
+  }
+
+  int getPos(int row, int col){
+    return (row * cols + col);
+  }
+
+  bool isValidMove(int origin, int target, bool isWhite){
+    //assemble list of valid moves
+    List<int> validMoves = List<int>.empty();
+    int oRow = getRow(origin);
+    int oCol = getCol(origin);
+    if(isWhite){
+      //piece is moving 'up'
+
+      //diag left (+1 row, -1 col)
+      if(oCol != 0){
+        //if == 0, can't move diag left
+        int newMove = getPos(oRow + 1, oCol - 1);
+        if(board[newMove] != Piece.white){
+          //not occupied by different piece of same team.
+          validMoves.add(newMove);
+        }
+      }
+      //forward, no check needed
+      int newMove = getPos(oRow + 1, oCol);
+      if(board[newMove] != Piece.white){
+        validMoves.add(newMove);
+      }
     }
   }
 }
