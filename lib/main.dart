@@ -98,6 +98,20 @@ class BreakthroughState {
       }
       ++wPiece;
     }
+    int getRow(int pos) {
+      return pos/cols;
+    }
+
+    int getCol(int pos){
+      return pos%cols;
+    }
+    //move method(row, col, piece)
+    void move(int row, int col){
+      if(isValidMove() == true) {
+       
+      }
+
+    }
   }
 }
 
