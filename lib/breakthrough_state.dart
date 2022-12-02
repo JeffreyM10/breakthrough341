@@ -19,14 +19,14 @@ class BreakthroughState {
   //row = pos/cols
   //col = pos % cols
   //pos = r * cols + c
-  int wPiece = 0;
-  int bPiece = 0;
+  int wPieces = 0;
+  int bPieces = 0;
 
   BreakthroughState(){
     //generate black pieces
     int r = 6;
     int c = 0;
-    while(bPiece < 16){
+    while(bPieces < 16){
       int pos = r * cols + c;
       board[pos] = Piece.black;
       ++c;
@@ -35,13 +35,13 @@ class BreakthroughState {
         c = 0;
         ++r;
       }
-      ++bPiece;
+      ++bPieces;
     }
 
     //generate white pieces
     r = 0;
     c = 0;
-    while(wPiece < 16){
+    while(wPieces < 16){
       int pos = r * cols + c;
       board[pos] = Piece.white;
       ++c;
@@ -50,7 +50,7 @@ class BreakthroughState {
         c = 0;
         ++r;
       }
-      ++wPiece;
+      ++wPieces;
     }
   }
 
@@ -69,6 +69,7 @@ class BreakthroughState {
     }
   }
 
+  /// takes row and column and returns the index of the board which represents the position.
   int getPos(int row, int col){
     return (row * cols + col);
   }
@@ -138,5 +139,39 @@ class BreakthroughState {
 
     //validMoves found, check if target move is one of them.
     return validMoves.contains(target);
+  }
+
+  /// checks if game is over;
+  /// returns -1 if game is not over;
+  /// returns 0 if white won;
+  /// returns 1 if black won;
+  int gameWon(){
+    //check if white or black lost all pieces
+    if(bPieces <= 0){
+      return 0;
+    }
+    if(wPieces <= 0){
+      return 1;
+    }
+
+    //check if any black pieces are in white home and vice versa
+      //black victory check
+    int r = 7;
+    for(int c = 0; c < 8; ++c){
+      int pos = getPos(r, c);
+      if(board[pos] == Piece.black){
+        return 1;
+      }
+    }
+      //white victory check
+    r = 0;
+    for(int c = 0; c < 8; ++c){
+      int pos = getPos(r, c);
+      if(board[pos] == Piece.white){
+        return 0;
+      }
+    }
+    //if at this stage, no victory yet, game continues.
+    return -1;
   }
 }
