@@ -55,6 +55,52 @@ class Piece {
   Piece(this.white, this.row, this.col);
 }
 
+class BreakthroughState {
+  //var board = List.generate(8, (size) => size * size, growable: false);
+  var board = List<Object>.filled(64, Null);
+  var rows = 8;
+  var cols = 8;
+  //row = pos/cols
+  //col = pos % cols
+  //pos = r * cols + c
+  var wPiece = 0;
+  var bPiece = 0;
+
+  BreakthroughState(){
+    //generate black pieces
+    int r = 0;
+    int c = 0;
+    while(bPiece < 16){
+      Piece newBlack = Piece(false, r, c);
+      int pos = r * cols + c;
+      board[pos] = newBlack;
+      ++c;
+      if(c > 7){
+        //c = 8, end of board
+        c = 0;
+        ++r;
+      }
+      ++bPiece;
+    }
+
+    //generate white pieces
+    r = 6;
+    c = 0;
+    while(wPiece < 16){
+      Piece newWhite = Piece(true, r, c);
+      int pos = r * cols + c;
+      board[pos] = newWhite;
+      ++c;
+      if(c > 7){
+        //c = 8, end of board
+        c = 0;
+        ++r;
+      }
+      ++wPiece;
+    }
+  }
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   List<Piece> pieces = [];
