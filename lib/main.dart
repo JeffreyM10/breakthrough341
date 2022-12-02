@@ -49,10 +49,10 @@ class MyHomePage extends StatefulWidget {
 
 class Piece {
   bool white;
-  int x;
-  int y;
+  int row;
+  int col;
 
-  Piece(this.white, this.x, this.y);
+  Piece(this.white, this.row, this.col);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
