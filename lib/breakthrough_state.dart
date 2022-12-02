@@ -90,11 +90,53 @@ class BreakthroughState {
           validMoves.add(newMove);
         }
       }
-      //forward, no check needed
+      //forward, no check for ANY piece
       int newMove = getPos(oRow + 1, oCol);
-      if(board[newMove] != Piece.white){
+      if(board[newMove] == Piece.empty){
         validMoves.add(newMove);
       }
+
+      //diag right (+1 row, +1 col)
+      if(oCol != 7){
+        //if == 7, can't move diag right
+        int newMove = getPos(oRow + 1, oCol + 1);
+        if(board[newMove] != Piece.white){
+          //not occupied by different piece of same team.
+          validMoves.add(newMove);
+        }
+      }     
     }
+
+    if(!isWhite){
+      //piece is moving 'down'
+
+      //diag left (-1 row, -1 col)
+      if(oCol != 0){
+        //if == 0, can't move diag left
+        int newMove = getPos(oRow - 1, oCol - 1);
+        if(board[newMove] != Piece.black){
+          //not occupied by different piece of same team.
+          validMoves.add(newMove);
+        }
+      }
+      //forward, check if ANY piece there
+      int newMove = getPos(oRow - 1, oCol);
+      if(board[newMove] == Piece.empty){
+        validMoves.add(newMove);
+      }
+
+      //diag right (-1 row, +1 col)
+      if(oCol != 7){
+        //if == 7, can't move diag right
+        int newMove = getPos(oRow - 1, oCol + 1);
+        if(board[newMove] != Piece.black){
+          //not occupied by different piece of same team.
+          validMoves.add(newMove);
+        }
+      }
+    }
+
+    //validMoves found, check if target move is one of them.
+    return validMoves.contains(target);
   }
 }
