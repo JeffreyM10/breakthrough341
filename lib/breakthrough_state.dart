@@ -82,10 +82,19 @@ class BreakthroughState {
     board[origin] = Piece.empty;
     
     //'capture' piece if target is occupied
-    Capture(target);
+    capture(target);
 
     //set target as player
     board[target] = oPiece;
+  }
+
+  void capture(int target){
+    if(board[target] == Piece.white){
+      --wPieces;
+    }
+    else if(board[target] == Piece.black){
+      --bPieces;
+    }
   }
 
   /// takes row and column and returns the index of the board which represents the position.
