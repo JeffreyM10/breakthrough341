@@ -77,17 +77,15 @@ class BreakthroughState {
 
   ///move method(origin pos, row and col or new position)
   void move(int origin, int target){
-    int origTarget = target;
-    //we know it is valid at this stage, isValidMove will be called somewhere before, this is what we call once all checks are done
-    //'delete' piece at origin (set to player empty)
-    int oRow = getRow(origin);
-    int oCol = getCol(origin);
-    List <piece> boardPosition = piece.empty;
+    //save old piece and remove it from original position
+    Piece oPiece = board[origin];
+    board[origin] = Piece.empty;
     
-    //call capture(target), it is being done by partner, will deal with any piece where you are going and 'capture' it
-    capture(target);
+    //'capture' piece if target is occupied
+    Capture(target);
+
     //set target as player
-    target = origTarget;
+    board[target] = oPiece;
   }
 
   /// takes row and column and returns the index of the board which represents the position.
