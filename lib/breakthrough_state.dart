@@ -22,7 +22,6 @@ class BreakthroughState {
   int wPieces = 0;
   int bPieces = 0;
   late Piece currentPlayer, winner;
-  late int turn;
 
 
   BreakthroughState(){
@@ -33,7 +32,6 @@ class BreakthroughState {
     //initalize key variables
     currentPlayer = Piece.white;
     winner = Piece.empty;
-    turn = 0;
     board = List<Piece>.filled(64, Piece.empty);
 
     //generate black pieces
@@ -73,6 +71,8 @@ class BreakthroughState {
   int getCol(int pos){
       return pos%cols;
   }
+
+  Piece getWinner() => winner;
 
   ///move method(origin pos, row and col or new position)
   void move(int origin, int target){
@@ -188,5 +188,14 @@ class BreakthroughState {
     }
     //if at this stage, no victory yet, game continues.
     return -1;
+  }
+
+  String getStatus(){
+    if(winner != Piece.empty){
+      return (winner == Piece.white) ? 'White wins! (They probably cheated)' : 'Black wins! (Took them long enough.)';
+    }
+    else{
+      return '$currentPlayer turn to play.';
+    }
   }
 }
