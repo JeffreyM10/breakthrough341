@@ -69,7 +69,7 @@ class BreakthroughState {
     //'delete' piece at origin (set to player empty)
     int oRow = getRow(origin);
     int oCol = getCol(origin);
-    List <int> boardPosition = piece.empty;
+    List <piece> boardPosition = piece.empty;
     
     //call capture(target), it is being done by partner, will deal with any piece where you are going and 'capture' it
     capture(target);
