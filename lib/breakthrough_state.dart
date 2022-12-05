@@ -13,7 +13,7 @@ enum Piece {
 
 class BreakthroughState {
   //var board = List.generate(8, (size) => size * size, growable: false);
-  List<Object> board = List<Object>.filled(64, Null);
+  late List<Piece> board;
   int rows = 8;
   int cols = 8;
   //row = pos/cols
@@ -21,8 +21,21 @@ class BreakthroughState {
   //pos = r * cols + c
   int wPieces = 0;
   int bPieces = 0;
+  late Piece currentPlayer, winner;
+  late int turn;
+
 
   BreakthroughState(){
+    newGame();
+  }
+
+  void newGame(){
+    //initalize key variables
+    currentPlayer = Piece.white;
+    winner = Piece.empty;
+    turn = 0;
+    board = List<Piece>.filled(64, Piece.empty);
+
     //generate black pieces
     int r = 6;
     int c = 0;
@@ -53,7 +66,7 @@ class BreakthroughState {
       ++wPieces;
     }
   }
-
+  
   int getRow(int pos) {
       return pos ~/ cols;
     }
