@@ -22,6 +22,8 @@ class BreakthroughState {
   int wPieces = 0;
   int bPieces = 0;
   late Piece currentPlayer, winner;
+  //-1 = no piece selected.
+  int selection = -1;
 
 
   BreakthroughState(){
