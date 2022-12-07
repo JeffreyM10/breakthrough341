@@ -98,19 +98,54 @@ class _MyHomePageState extends State<MyHomePage> {
                                     onPressed: () => _processPress(index),
                                     child: imageMap[_gameState.board[index]] ??
                                         Container(),
-                                  )
-                              }
-                            )
-                          ]
-                        )
-                  )
-                )
-              ]
+                                  );
+                              })  
+                          ],
+                        )),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              _gameState.getStatus(),
+                              style: const TextStyle(fontSize: 36),
+                            ),
+                          ),
+                          //reset button
+                          const Spacer(),
+                          ElevatedButton(
+                            onPressed: _resetGame,
+                            child: const Text(
+                              'Reset',
+                              style: TextStyle(fontSize: 36),
+                            ),
+                         )
+                       ])    
             )
-          )
-        )
-      )         
-              
+              ]
+          ),
+            ),
+          ),
+        ));
+  }
+
+void _resetGame() {
+    setState(() {
+      _gameState.newGame();
+    });
+  }
+        
+        
+        
+        
+        
+        
+        
+        
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
       
