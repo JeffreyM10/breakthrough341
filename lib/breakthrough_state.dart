@@ -201,16 +201,15 @@ void playAt(int index){
   }
 
   /// checks if game is over;
-  /// returns -1 if game is not over;
-  /// returns 0 if white won;
-  /// returns 1 if black won;
-  int gameWon(){
+  bool gameWon(){
     //check if white or black lost all pieces
     if(bPieces <= 0){
-      return 0;
+      winner = Piece.white;
+      return true;
     }
     if(wPieces <= 0){
-      return 1;
+      winner = Piece.black;
+      return true;
     }
 
     //check if any black pieces are in white home and vice versa
@@ -219,7 +218,8 @@ void playAt(int index){
     for(int c = 0; c < 8; ++c){
       int pos = getPos(r, c);
       if(board[pos] == Piece.black){
-        return 1;
+        winner = Piece.black;
+        return true;
       }
     }
       //white victory check
@@ -227,11 +227,12 @@ void playAt(int index){
     for(int c = 0; c < 8; ++c){
       int pos = getPos(r, c);
       if(board[pos] == Piece.white){
-        return 0;
+        winner = Piece.white;
+        return true;
       }
     }
     //if at this stage, no victory yet, game continues.
-    return -1;
+    return false;
   }
 
   String getStatus(){
