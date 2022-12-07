@@ -105,6 +105,34 @@ class BreakthroughState {
     return (row * cols + col);
   }
 
+void playAt(int index){
+  if(selection == -1){
+    //make a selection
+    //check if selected tile has correct piece
+    if(currentPlayer == board[index]){
+      selection = index;
+      return;
+    }
+  }
+  else{
+    //check if move is valid
+    bool isWhite = (board[selection] == Piece.white) ? true : false;
+    if(isValidMove(selection, index, isWhite)){
+      //valid move, move.
+      move(selection, index);
+      
+      //move made, reset selection
+      selection = -1;
+      currentPlayer = (currentPlayer == Piece.white) ? Piece.black : Piece.white;
+    }
+    else{
+      //invalid move
+      selection = -1;
+      System.out.println("Invalid Move.");
+    }
+  }
+}
+
   bool isValidMove(int origin, int target, bool isWhite){
     //assemble list of valid moves
     List<int> validMoves = List<int>.empty();
