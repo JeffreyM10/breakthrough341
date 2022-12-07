@@ -105,6 +105,34 @@ class BreakthroughState {
     return (row * cols + col);
   }
 
+void playAt(int index){
+  if(selection == -1){
+    //make a selection
+    //check if selected tile has correct piece
+    if(currentPlayer == board[index]){
+      selection = index;
+      return;
+    }
+  }
+  else{
+    //check if move is valid
+    bool isWhite = (board[selection] == Piece.white) ? true : false;
+    if(isValidMove(selection, index, isWhite)){
+      //valid move, move.
+      move(selection, index);
+      
+      //move made, reset selection
+      selection = -1;
+      currentPlayer = (currentPlayer == Piece.white) ? Piece.black : Piece.white;
+    }
+    else{
+      //invalid move
+      selection = -1;
+      System.out.println("Invalid Move.");
+    }
+  }
+}
+
   bool isValidMove(int origin, int target, bool isWhite){
     //assemble list of valid moves
     List<int> validMoves = List<int>.empty();
@@ -173,16 +201,15 @@ class BreakthroughState {
   }
 
   /// checks if game is over;
-  /// returns -1 if game is not over;
-  /// returns 0 if white won;
-  /// returns 1 if black won;
-  int gameWon(){
+  bool gameWon(){
     //check if white or black lost all pieces
     if(bPieces <= 0){
-      return 0;
+      winner = Piece.white;
+      return true;
     }
     if(wPieces <= 0){
-      return 1;
+      winner = Piece.black;
+      return true;
     }
 
     //check if any black pieces are in white home and vice versa
@@ -191,7 +218,8 @@ class BreakthroughState {
     for(int c = 0; c < 8; ++c){
       int pos = getPos(r, c);
       if(board[pos] == Piece.black){
-        return 1;
+        winner = Piece.black;
+        return true;
       }
     }
       //white victory check
@@ -199,11 +227,12 @@ class BreakthroughState {
     for(int c = 0; c < 8; ++c){
       int pos = getPos(r, c);
       if(board[pos] == Piece.white){
-        return 0;
+        winner = Piece.white;
+        return true;
       }
     }
     //if at this stage, no victory yet, game continues.
-    return -1;
+    return false;
   }
 
   String getStatus(){

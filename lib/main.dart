@@ -133,6 +133,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
+  void _getstatus(int index) {
+    setState((){
+      _gamesState.playAt(index);
+    });
+  }
+
+
 void _resetGame() {
     setState(() {
       _gameState.newGame();
