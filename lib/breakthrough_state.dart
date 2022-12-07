@@ -14,8 +14,9 @@ enum Piece {
 class BreakthroughState {
   //var board = List.generate(8, (size) => size * size, growable: false);
   late List<Piece> board;
-  int rows = 8;
-  int cols = 8;
+  static const rows = 8;
+  static const cols = 8;
+  static const numCells = rows * cols;
   //row = pos/cols
   //col = pos % cols
   //pos = r * cols + c

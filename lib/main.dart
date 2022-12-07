@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 
+
+final imageMap = {
+  Player.w: Image.asset('assets/white.png'),
+  Player.b: Image.asset('assets/black.png')
+};
+
 void main() {
   runApp(const MyApp());
 }
+//have two grids on top of each other one is doing alternate colors depending on whether the sum of the row + col odd or even. and stack on top of that any images that would be the pieces for the player.
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -48,17 +55,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _gameState = BreakthroughState();
   int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
   }
 
   @override
@@ -76,9 +74,46 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
+        child: ConstrainedBox(
+          const BoxConstraints(minWidth: 120.0, minHeight: 120.0),
+          child: AspectRatio(
+            aspectRatio: 5/6
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: AspectRatio(
+                        aspectRatio: 1 / 1,
+                        child: Stack(
+                          children: [
+                            Image.asset('assets/board.png'),
+                            GridView.builder(
+                              itemCount: BreakthroughState.numCells,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: BreakthroughState.rows),
+                              itemBuilder: (context, index) {
+                                  return TextButton(
+                                    onPressed: () => _processPress(index),
+                                    child: imageMap[_gameState.board[index]] ??
+                                        Container(),
+                                  )
+                              }
+                            )
+                          ]
+                        )
+                  )
+                )
+              ]
+            )
+          )
+        )
+      )         
+              
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
+      
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
@@ -93,23 +128,4 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
+
