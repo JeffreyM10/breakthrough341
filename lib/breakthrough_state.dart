@@ -1,7 +1,7 @@
 enum Piece {
   empty(' '),
-  white('W'),
-  black('B');
+  white('White'),
+  black('Black');
 
   final String str;
 
@@ -32,6 +32,9 @@ class BreakthroughState {
 
   void newGame() {
     //initalize key variables
+    selection = -1;
+    wPieces = 0;
+    bPieces = 0;
     currentPlayer = Piece.white;
     winner = Piece.empty;
     board = List<Piece>.filled(64, Piece.empty);
@@ -103,31 +106,39 @@ class BreakthroughState {
     return (row * cols + col);
   }
 
-  void playAt(int index) {
+  bool playAt(int index) {
+    if(winner != Piece.empty){
+      return false;
+    }
     if (selection == -1) {
       //make a selection
       //check if selected tile has correct piece
       if (currentPlayer == board[index]) {
         selection = index;
-        return;
+        return true;
       }
-    } else {
+    } 
+    else {
       //check if move is valid
-      bool isWhite = (board[selection] == Piece.white) ? true : false;
+      bool isWhite = (currentPlayer == Piece.white) ? true : false;
       if (isValidMove(selection, index, isWhite)) {
         //valid move, move.
         move(selection, index);
-
         //move made, reset selection
         selection = -1;
         currentPlayer =
             (currentPlayer == Piece.white) ? Piece.black : Piece.white;
-      } else {
+        gameWon();
+        return true;
+      } 
+      else {
         //invalid move
         selection = -1;
         //System.out.println("Invalid Move.");
+        return false;
       }
     }
+    return false;
   }
 
   bool isValidMove(int origin, int target, bool isWhite) {
@@ -135,37 +146,8 @@ class BreakthroughState {
     List<int> validMoves = List<int>.empty();
     int oRow = getRow(origin);
     int oCol = getCol(origin);
-    if (isWhite) {
-      //piece is moving 'up'
-
-      //diag left (+1 row, -1 col)
-      if (oCol != 0) {
-        //if == 0, can't move diag left
-        int newMove = getPos(oRow + 1, oCol - 1);
-        if (board[newMove] != Piece.white) {
-          //not occupied by different piece of same team.
-          validMoves.add(newMove);
-        }
-      }
-      //forward, no check for ANY piece
-      int newMove = getPos(oRow + 1, oCol);
-      if (board[newMove] == Piece.empty) {
-        validMoves.add(newMove);
-      }
-
-      //diag right (+1 row, +1 col)
-      if (oCol != 7) {
-        //if == 7, can't move diag right
-        int newMove = getPos(oRow + 1, oCol + 1);
-        if (board[newMove] != Piece.white) {
-          //not occupied by different piece of same team.
-          validMoves.add(newMove);
-        }
-      }
-    }
-
     if (!isWhite) {
-      //piece is moving 'down'
+      //piece is moving 'up'
 
       //diag left (-1 row, -1 col)
       if (oCol != 0) {
@@ -176,7 +158,7 @@ class BreakthroughState {
           validMoves.add(newMove);
         }
       }
-      //forward, check if ANY piece there
+      //forward, no check for ANY piece
       int newMove = getPos(oRow - 1, oCol);
       if (board[newMove] == Piece.empty) {
         validMoves.add(newMove);
@@ -187,6 +169,35 @@ class BreakthroughState {
         //if == 7, can't move diag right
         int newMove = getPos(oRow - 1, oCol + 1);
         if (board[newMove] != Piece.black) {
+          //not occupied by different piece of same team.
+          validMoves.add(newMove);
+        }
+      }
+    }
+
+    if (isWhite) {
+      //piece is moving 'down'
+
+      //diag left (+1 row, -1 col)
+      if (oCol != 0) {
+        //if == 0, can't move diag left
+        int newMove = getPos(oRow + 1, oCol - 1);
+        if (board[newMove] != Piece.white) {
+          //not occupied by different piece of same team.
+          validMoves.add(newMove);
+        }
+      }
+      //forward, check if ANY piece there
+      int newMove = getPos(oRow + 1, oCol);
+      if (board[newMove] == Piece.empty) {
+        validMoves.add(newMove);
+      }
+
+      //diag right (+1 row, +1 col)
+      if (oCol != 7) {
+        //if == 7, can't move diag right
+        int newMove = getPos(oRow + 1, oCol + 1);
+        if (board[newMove] != Piece.white) {
           //not occupied by different piece of same team.
           validMoves.add(newMove);
         }
@@ -204,27 +215,27 @@ class BreakthroughState {
       winner = Piece.white;
       return true;
     }
-    if (wPieces <= 0) {
+    else if (wPieces <= 0) {
       winner = Piece.black;
       return true;
     }
 
     //check if any black pieces are in white home and vice versa
-    //black victory check
-    int r = 7;
-    for (int c = 0; c < 8; ++c) {
-      int pos = getPos(r, c);
-      if (board[pos] == Piece.black) {
-        winner = Piece.black;
-        return true;
-      }
-    }
     //white victory check
-    r = 0;
+    int r = 7;
     for (int c = 0; c < 8; ++c) {
       int pos = getPos(r, c);
       if (board[pos] == Piece.white) {
         winner = Piece.white;
+        return true;
+      }
+    }
+    //black victory check
+    r = 0;
+    for (int c = 0; c < 8; ++c) {
+      int pos = getPos(r, c);
+      if (board[pos] == Piece.black) {
+        winner = Piece.black;
         return true;
       }
     }
@@ -235,10 +246,10 @@ class BreakthroughState {
   String getStatus() {
     if (winner != Piece.empty) {
       return (winner == Piece.white)
-          ? 'White wins! (They probably cheated)'
-          : 'Black wins! (Took them long enough.)';
+          ? 'White wins!'
+          : 'Black wins!';
     } else {
-      return '$currentPlayer turn to play.';
+      return '$currentPlayer`s turn to play.';
     }
   }
 }

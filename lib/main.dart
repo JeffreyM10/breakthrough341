@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(minWidth: 120.0, minHeight: 120.0),
+            constraints: BoxConstraints(minWidth: 150.0, minHeight: 150.0),
             child: AspectRatio(
               aspectRatio: 5 / 6,
               child: Column(
